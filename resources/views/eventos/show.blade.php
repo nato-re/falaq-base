@@ -15,7 +15,7 @@
 
                     <textarea name="texto" id="texto" rows="4" 
                               class="form-control bg-dark text-white border-secondary @error('texto') is-invalid @enderror"
-                              placeholder="Digite sua dúvida ou comentário para o palestrante..."></textarea>
+                              placeholder="Digite sua dúvida ou comentário para o palestrante...">{{ old('texto') }}</textarea>
 
                     @error('texto')
                         <div class="invalid-feedback fw-bold">
@@ -32,7 +32,7 @@
     <div class="col-md-7">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold m-0">📋 Perguntas do Evento</h4>
-            <span class="text-secondary small">Total no Banco: {{ $evento->perguntas->count() }}</span>
+            <span class="text-secondary small">Total no Banco: {{ $evento->perguntas()->count() }}</span>
         </div>
 
         @forelse($perguntas as $pergunta)
@@ -52,11 +52,9 @@
         @endforelse
 
         <!-- TICKET #002: Renderização dos Botões de Paginação -->
-        @if(method_exists($perguntas, 'links'))
-            <div class="d-flex justify-content-center mt-4">
-                {{ $perguntas->links() }}
-            </div>
-        @endif
+        <div class="d-flex justify-content-center mt-4">
+            {{ $perguntas->links() }}
+        </div>
     </div>
 </div>
 @endsection
