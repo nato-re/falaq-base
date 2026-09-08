@@ -20,6 +20,7 @@ class PerguntaSeeder extends Seeder
         for ($i = 1; $i <= 5000; $i++) {
             $perguntas[] = [
                 'evento_id'  => 1,
+                'user_id' => 1,
                 'texto'      => "Pergunta de teste #{$i}: Como a arquitetura lida com alta demanda de acessos simultâneos?",
                 'status'     => 'pendente',
                 'created_at' => $agora->copy()->subSeconds(5000 - $i),
@@ -36,6 +37,7 @@ class PerguntaSeeder extends Seeder
         for ($j = 1; $j <= 5; $j++) {
             Pergunta::create([
                 'evento_id'  => 2,
+                'user_id' => 1,
                 'texto'      => "Pergunta do workshop #{$j}: O que é o Service Container?",
                 'status'     => 'aprovado',
             ]);

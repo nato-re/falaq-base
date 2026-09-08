@@ -19,9 +19,10 @@ return new class extends Migration
         Schema::create('perguntas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('evento_id')->constrained('eventos')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->nullable();
             $table->text('texto');
             $table->string('status')->default('pendente');
-            $table->timestamps();
+            $table->timestamps();x
         });
     }
 

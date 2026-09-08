@@ -28,7 +28,9 @@ class EventoController extends Controller
         $evento = Evento::find($id);
 
         // ⚠ BUG LEGADO: Carrega TODOS os registros da tabela no PHP
-        $perguntas = Pergunta::all();
+        $perguntas = Pergunta::where('evento_id' , $evento->id)
+        ->with('users')
+        ->get();
 
         return view('eventos.show', compact('evento', 'perguntas'));
     }
@@ -43,6 +45,7 @@ class EventoController extends Controller
 
         Pergunta::create([
             'evento_id' => $evento->id,
+            'user_id' => null,
             'texto'     => $request->input('texto'),
             'status'    => 'pendente',
         ]);
