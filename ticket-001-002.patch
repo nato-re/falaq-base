@@ -1,0 +1,65 @@
+diff --git a/app/Http/Controllers/EventoController.php b/app/Http/Controllers/EventoController.php
+index 957f35b..1a3cf0d 100644
+--- a/app/Http/Controllers/EventoController.php
++++ b/app/Http/Controllers/EventoController.php
+@@ -25,10 +25,11 @@ public function index()
+      */
+     public function show($id)
+     {
+-        $evento = Evento::find($id);
++        $evento = Evento::findOrFail($id);
+ 
+-        // ⚠ BUG LEGADO: Carrega TODOS os registros da tabela no PHP
+-        $perguntas = Pergunta::all();
++        $perguntas = Pergunta::where('evento_id', $evento->id)
++            ->latest()
++            ->paginate(10);
+ 
+         return view('eventos.show', compact('evento', 'perguntas'));
+     }
+diff --git a/app/Http/Requests/StorePerguntaRequest.php b/app/Http/Requests/StorePerguntaRequest.php
+index 1181db8..dfcbc7a 100644
+--- a/app/Http/Requests/StorePerguntaRequest.php
++++ b/app/Http/Requests/StorePerguntaRequest.php
+@@ -14,6 +14,18 @@ public function authorize(): bool
+         return true;
+     }
+ 
++    /**
++     * O evento_id vem do parâmetro da rota (/eventos/{id}/perguntas), não do
++     * corpo do formulário. Mesclamos aqui para que a regra "exists" abaixo
++     * consiga validá-lo normalmente.
++     */
++    protected function prepareForValidation(): void
++    {
++        $this->merge([
++            'evento_id' => $this->route('id'),
++        ]);
++    }
++
+     /**
+      * TICKET #001: Implemente aqui as regras de validação estritas.
+      * Requisitos:
+@@ -23,7 +35,8 @@ public function authorize(): bool
+     public function rules(): array
+     {
+         return [
+-            // TODO (Dev Jr): Adicione as regras de validação para o Ticket #001
++            'texto' => ['required', 'string', 'min:10', 'max:255'],
++            'evento_id' => ['required', 'exists:eventos,id'],
+         ];
+     }
+ }
+diff --git a/resources/views/eventos/show.blade.php b/resources/views/eventos/show.blade.php
+index b43d237..d4b99fa 100644
+--- a/resources/views/eventos/show.blade.php
++++ b/resources/views/eventos/show.blade.php
+@@ -54,7 +54,7 @@ class="form-control bg-dark text-white border-secondary @error('texto') is-inval
+         <!-- TICKET #002: Renderização dos Botões de Paginação -->
+         @if(method_exists($perguntas, 'links'))
+             <div class="d-flex justify-content-center mt-4">
+-                
++                {{ $perguntas->links() }}
+             </div>
+         @endif
+     </div>
