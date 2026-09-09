@@ -52,11 +52,9 @@
         @endforelse
 
         <!-- TICKET #002: Renderização dos Botões de Paginação -->
-        @if(method_exists($perguntas, 'links'))
-            <div class="d-flex justify-content-center mt-4">
-                
-            </div>
-        @endif
+       <div class="d-flex justify-content-center mt-4">
+    {{ $perguntas->links() }}
+</div>
     </div>
 </div>
 @endsection
