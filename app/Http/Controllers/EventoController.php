@@ -25,10 +25,12 @@ class EventoController extends Controller
      */
     public function show($id)
     {
-        $evento = Evento::find($id);
+        $evento = Evento::findOrFail($id);
 
-        // ⚠ BUG LEGADO: Carrega TODOS os registros da tabela no PHP
-        $perguntas = Pergunta::all();
+        // TICKET #002: filtra pelo evento, ordena pelas mais recentes e pagina de 10 em 10.
+        $perguntas = Pergunta::where('evento_id', $evento->id)
+            ->latest()
+            ->paginate(10);
 
         return view('eventos.show', compact('evento', 'perguntas'));
     }
