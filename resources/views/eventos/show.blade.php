@@ -50,13 +50,12 @@
                 Nenhuma pergunta enviada ainda. Seja o primeiro!
             </div>
         @endforelse
-
-        <!-- TICKET #002: Renderização dos Botões de Paginação -->
-        @if(method_exists($perguntas, 'links'))
-            <div class="d-flex justify-content-center mt-4">
-                
-            </div>
-        @endif
+<!-- TICKET #002: Renderização dos Botões de Paginação -->
+@if(method_exists($perguntas, 'links'))
+    <div class="d-flex justify-content-center mt-4">
+        {{ $perguntas->links() }}
+    </div>
+@endif
     </div>
 </div>
 @endsection
