@@ -15,7 +15,7 @@
 
                     <textarea name="texto" id="texto" rows="4" 
                               class="form-control bg-dark text-white border-secondary @error('texto') is-invalid @enderror"
-                              placeholder="Digite sua dúvida ou comentário para o palestrante..."></textarea>
+                              placeholder="Digite sua dúvida ou comentário para o palestrante...">{{ old('texto') }}</textarea>
 
                     @error('texto')
                         <div class="invalid-feedback fw-bold">
@@ -32,13 +32,14 @@
     <div class="col-md-7">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold m-0">📋 Perguntas do Evento</h4>
-            <span class="text-secondary small">Total no Banco: {{ $evento->perguntas->count() }}</span>
+            <span class="text-secondary small">Total no Banco: {{ $evento->perguntas()->count() }}</span>
         </div>
 
         @forelse($perguntas as $pergunta)
             <div class="card mb-3 shadow-sm border-start border-4 border-primary">
                 <div class="card-body">
                     <p class="fs-5 mb-2 text-white">{{ $pergunta->texto }}</p>
+                    <div class="text-secondary small mb-1">Por: {{ $pergunta->user->name ?? 'Anônimo' }}</div>
                     <div class="d-flex justify-content-between align-items-center text-secondary small">
                         <span>Status: <span class="badge bg-success">{{ $pergunta->status }}</span></span>
                         <span>{{ $pergunta->created_at->format('d/m/Y H:i') }}</span>
@@ -52,11 +53,9 @@
         @endforelse
 
         <!-- TICKET #002: Renderização dos Botões de Paginação -->
-        @if(method_exists($perguntas, 'links'))
-            <div class="d-flex justify-content-center mt-4">
-                
-            </div>
-        @endif
+        <div class="d-flex justify-content-center mt-4">
+            {{ $perguntas->links() }}
+        </div>
     </div>
 </div>
 @endsection
