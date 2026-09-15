@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="row">
-    <!-- Formularço de envio de Pergunta -->
+    <!-- Formulário de envio de Pergunta -->
     <div class="col-md-5 mb-4">
         <div class="card shadow-sm p-3">
             <h4 class="fw-bold mb-3">💬 Faça sua Pergunta</h4>
@@ -23,7 +23,10 @@
                         </div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold">Enviar Pergunta</button>
+
+                <button type="submit" class="btn btn-primary w-100 fw-bold">
+                    Enviar Pergunta
+                </button>
             </form>
         </div>
     </div>
@@ -32,17 +35,36 @@
     <div class="col-md-7">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold m-0">📋 Perguntas do Evento</h4>
-            <span class="text-secondary small">Total no Banco: {{ $evento->perguntas->count() }}</span>
+            <span class="text-secondary small">
+                Total no Banco: {{ $evento->perguntas->count() }}
+            </span>
         </div>
 
         @forelse($perguntas as $pergunta)
             <div class="card mb-3 shadow-sm border-start border-4 border-primary">
                 <div class="card-body">
-                    <p class="fs-5 mb-2 text-white">{{ $pergunta->texto }}</p>
-                    <div class="d-flex justify-content-between align-items-center text-secondary small">
-                        <span>Status: <span class="badge bg-success">{{ $pergunta->status }}</span></span>
-                        <span>{{ $pergunta->created_at->format('d/m/Y H:i') }}</span>
+
+                    <p class="fs-5 mb-2 text-white">
+                        {{ $pergunta->texto }}
+                    </p>
+
+                    <div class="text-secondary small mb-2">
+                        Autor: {{ $pergunta->user->name ?? 'Anônimo' }}
                     </div>
+
+                    <div class="d-flex justify-content-between align-items-center text-secondary small">
+                        <span>
+                            Status:
+                            <span class="badge bg-success">
+                                {{ $pergunta->status }}
+                            </span>
+                        </span>
+
+                        <span>
+                            {{ $pergunta->created_at->format('d/m/Y H:i') }}
+                        </span>
+                    </div>
+
                 </div>
             </div>
         @empty

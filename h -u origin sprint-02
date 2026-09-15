@@ -1,0 +1,117 @@
+[1mdiff --git a/app/Http/Controllers/EventoController.php b/app/Http/Controllers/EventoController.php[m
+[1mindex 1a3cf0d..2d04242 100644[m
+[1m--- a/app/Http/Controllers/EventoController.php[m
+[1m+++ b/app/Http/Controllers/EventoController.php[m
+[36m@@ -27,7 +27,8 @@[m [mpublic function show($id)[m
+     {[m
+         $evento = Evento::findOrFail($id);[m
+ [m
+[31m-        $perguntas = Pergunta::where('evento_id', $evento->id)[m
+[32m+[m[32m        $perguntas = Pergunta::with('user')[m
+[32m+[m[32m            ->where('evento_id', $evento->id)[m
+             ->latest()[m
+             ->paginate(10);[m
+ [m
+[1mdiff --git a/app/Models/Pergunta.php b/app/Models/Pergunta.php[m
+[1mindex a14b575..54675d5 100644[m
+[1m--- a/app/Models/Pergunta.php[m
+[1m+++ b/app/Models/Pergunta.php[m
+[36m@@ -12,8 +12,8 @@[m [mclass Pergunta extends Model[m
+ [m
+     protected $fillable = ['evento_id', 'texto', 'status'];[m
+ [m
+[31m-    public function evento(): BelongsTo[m
+[32m+[m[32m    public function user(): BelongsTo[m
+     {[m
+[31m-        return $this->belongsTo(Evento::class);[m
+[32m+[m[32m        return $this->belongsTo(User::class);[m
+     }[m
+ }[m
+[1mdiff --git a/app/Models/User.php b/app/Models/User.php[m
+[1mindex 68f3a66..2e79955 100644[m
+[1m--- a/app/Models/User.php[m
+[1m+++ b/app/Models/User.php[m
+[36m@@ -7,6 +7,7 @@[m
+ use Illuminate\Database\Eloquent\Factories\HasFactory;[m
+ use Illuminate\Foundation\Auth\User as Authenticatable;[m
+ use Illuminate\Notifications\Notifiable;[m
+[32m+[m[32muse Illuminate\Database\Eloquent\Relations\HasMany;[m
+ [m
+ class User extends Authenticatable[m
+ {[m
+[36m@@ -46,4 +47,9 @@[m [mprotected function casts(): array[m
+             'password' => 'hashed',[m
+         ];[m
+     }[m
+[32m+[m
+[32m+[m[32m    public function perguntas(): HasMany[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return $this->hasMany(Pergunta::class);[m
+[32m+[m[32m    }[m
+ }[m
+[1mdiff --git a/resources/views/eventos/show.blade.php b/resources/views/eventos/show.blade.php[m
+[1mindex d4b99fa..c32f076 100644[m
+[1m--- a/resources/views/eventos/show.blade.php[m
+[1m+++ b/resources/views/eventos/show.blade.php[m
+[36m@@ -4,7 +4,7 @@[m
+ [m
+ @section('content')[m
+ <div class="row">[m
+[31m-    <!-- Formularço de envio de Pergunta -->[m
+[32m+[m[32m    <!-- Formulário de envio de Pergunta -->[m
+     <div class="col-md-5 mb-4">[m
+         <div class="card shadow-sm p-3">[m
+             <h4 class="fw-bold mb-3">💬 Faça sua Pergunta</h4>[m
+[36m@@ -23,7 +23,10 @@[m [mclass="form-control bg-dark text-white border-secondary @error('texto') is-inval[m
+                         </div>[m
+                     @enderror[m
+                 </div>[m
+[31m-                <button type="submit" class="btn btn-primary w-100 fw-bold">Enviar Pergunta</button>[m
+[32m+[m
+[32m+[m[32m                <button type="submit" class="btn btn-primary w-100 fw-bold">[m
+[32m+[m[32m                    Enviar Pergunta[m
+[32m+[m[32m                </button>[m
+             </form>[m
+         </div>[m
+     </div>[m
+[36m@@ -32,17 +35,36 @@[m [mclass="form-control bg-dark text-white border-secondary @error('texto') is-inval[m
+     <div class="col-md-7">[m
+         <div class="d-flex justify-content-between align-items-center mb-3">[m
+             <h4 class="fw-bold m-0">📋 Perguntas do Evento</h4>[m
+[31m-            <span class="text-secondary small">Total no Banco: {{ $evento->perguntas->count() }}</span>[m
+[32m+[m[32m            <span class="text-secondary small">[m
+[32m+[m[32m                Total no Banco: {{ $evento->perguntas->count() }}[m
+[32m+[m[32m            </span>[m
+         </div>[m
+ [m
+         @forelse($perguntas as $pergunta)[m
+             <div class="card mb-3 shadow-sm border-start border-4 border-primary">[m
+                 <div class="card-body">[m
+[31m-                    <p class="fs-5 mb-2 text-white">{{ $pergunta->texto }}</p>[m
+[32m+[m
+[32m+[m[32m                    <p class="fs-5 mb-2 text-white">[m
+[32m+[m[32m                        {{ $pergunta->texto }}[m
+[32m+[m[32m                    </p>[m
+[32m+[m
+[32m+[m[32m                    <div class="text-secondary small mb-2">[m
+[32m+[m[32m                        Autor: {{ $pergunta->user->name ?? 'Anônimo' }}[m
+[32m+[m[32m                    </div>[m
+[32m+[m
+                     <div class="d-flex justify-content-between align-items-center text-secondary small">[m
+[31m-                        <span>Status: <span class="badge bg-success">{{ $pergunta->status }}</span></span>[m
+[31m-                        <span>{{ $pergunta->created_at->format('d/m/Y H:i') }}</span>[m
+[32m+[m[32m                        <span>[m
+[32m+[m[32m                            Status:[m
+[32m+[m[32m                            <span class="badge bg-success">[m
+[32m+[m[32m                                {{ $pergunta->status }}[m
+[32m+[m[32m                            </span>[m
+[32m+[m[32m                        </span>[m
+[32m+[m
+[32m+[m[32m                        <span>[m
+[32m+[m[32m                            {{ $pergunta->created_at->format('d/m/Y H:i') }}[m
+[32m+[m[32m                        </span>[m
+                     </div>[m
+[32m+[m
+                 </div>[m
+             </div>[m
+         @empty[m
