@@ -15,6 +15,14 @@ class StorePerguntaRequest extends FormRequest
     }
 
     /**
+     * Prepara os dados para validação, injetando o evento_id a partir da rota.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge(['evento_id' => $this->route('id')]);
+    }
+
+    /**
      * TICKET #001: Implemente aqui as regras de validação estritas.
      * Requisitos:
      * - texto: obrigatório, string, mínimo de 10 caracteres, máximo de 255.
@@ -23,7 +31,8 @@ class StorePerguntaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // TODO (Dev Jr): Adicione as regras de validação para o Ticket #001
+            'texto' => ['required', 'string', 'min:10', 'max:255'],
+            'evento_id' => ['required', 'exists:eventos,id'],
         ];
     }
 }
