@@ -20,6 +20,7 @@ class EventoController extends Controller
         $evento = Evento::findOrFail($id);
 
         $perguntas = Pergunta::where('evento_id', $evento->id)
+            ->with('user')
             ->latest()
             ->paginate(10);
 
