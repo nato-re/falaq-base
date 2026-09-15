@@ -12,8 +12,8 @@ class Pergunta extends Model
 
     protected $fillable = ['evento_id', 'texto', 'status'];
 
-    public function evento(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Evento::class);
+        return $this->belongsTo(User::class);
     }
 }
