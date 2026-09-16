@@ -12,19 +12,23 @@ class EventoController extends Controller
     public function index()
     {
         $eventos = Evento::all();
+
         return view('eventos.index', compact('eventos'));
     }
 
     /**
-     * TICKET #002 (BUG LEGADO DE PERFORMANCE):
-     * Filtra as perguntas do evento atual, ordena pelas mais recentes
+     * TICKET #002 / #004:
+     * Filtra as perguntas do evento atual,
+     * carrega o usuário de cada pergunta,
+     * ordena pelas mais recentes
      * e pagina de 10 em 10.
      */
     public function show($id)
     {
         $evento = Evento::findOrFail($id);
 
-        $perguntas = Pergunta::where('evento_id', $evento->id)
+        $perguntas = Pergunta::with('user')
+            ->where('evento_id', $evento->id)
             ->latest()
             ->paginate(10);
 
@@ -32,7 +36,7 @@ class EventoController extends Controller
     }
 
     /**
-     * TICKET #001 (BUG LEGADO DE SEGURANÇA):
+     * TICKET #001:
      * Salva a pergunta usando a requisição validada.
      */
     public function storePergunta(StorePerguntaRequest $request, $id)
@@ -45,7 +49,8 @@ class EventoController extends Controller
             'status'    => 'pendente',
         ]);
 
-        return redirect()->route('eventos.show', $evento->id)
+        return redirect()
+            ->route('eventos.show', $evento->id)
             ->with('sucesso', 'Sua pergunta foi enviada com sucesso!');
     }
 }
