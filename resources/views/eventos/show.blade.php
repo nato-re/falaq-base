@@ -32,7 +32,7 @@
     <div class="col-md-7">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold m-0">📋 Perguntas do Evento</h4>
-            <span class="text-secondary small">Total no Banco: {{ $evento->perguntas->count() }}</span>
+            <span class="text-secondary small">Total no Banco: {{ $evento->perguntas()->count() }}</span>
         </div>
 
         @forelse($perguntas as $pergunta)
@@ -54,7 +54,7 @@
         <!-- TICKET #002: Renderização dos Botões de Paginação -->
         @if(method_exists($perguntas, 'links'))
             <div class="d-flex justify-content-center mt-4">
-                
+                {{ $perguntas->links() }}
             </div>
         @endif
     </div>
