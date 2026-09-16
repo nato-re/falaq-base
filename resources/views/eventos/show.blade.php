@@ -38,6 +38,9 @@
         @forelse($perguntas as $pergunta)
             <div class="card mb-3 shadow-sm border-start border-4 border-primary">
                 <div class="card-body">
+                    <p class="fs-6 mb-1 text-secondary">
+                        <strong>{{ $pergunta->user->name ?? 'Anônimo' }}</strong>
+                    </p>
                     <p class="fs-5 mb-2 text-white">{{ $pergunta->texto }}</p>
                     <div class="d-flex justify-content-between align-items-center text-secondary small">
                         <span>Status: <span class="badge bg-success">{{ $pergunta->status }}</span></span>
@@ -52,11 +55,9 @@
         @endforelse
 
         <!-- TICKET #002: Renderização dos Botões de Paginação -->
-        @if(method_exists($perguntas, 'links'))
-            <div class="d-flex justify-content-center mt-4">
-                
-            </div>
-        @endif
+       <div class="d-flex justify-content-center mt-4">
+    {{ $perguntas->links() }}
+</div>
     </div>
 </div>
 @endsection
