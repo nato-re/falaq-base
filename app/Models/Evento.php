@@ -10,7 +10,7 @@ class Evento extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['titulo', 'descricao', 'data_evento'];
+    protected $fillable = ['titulo', 'descricao', 'data_evento', 'user_id'];
 
     public function perguntas(): HasMany
     {

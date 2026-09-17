@@ -21,6 +21,17 @@
             <a class="navbar-brand fw-bold" href="{{ route('eventos.index') }}">
                 🚀 FalaQ-Eu_T_3scuto <span class="badge bg-secondary fs-6">MVP</span>
             </a>
+            @guest
+                <a href="{{ route('login') }}">Login</a>
+                <a href="{{ route('register') }}">Registro</a>
+            @endguest
+            @auth
+                <span>Olá, {{ Auth::user()->name }} </span>
+                <form action="{{ route('logout') }}" method="post">
+                    @csrf
+                    <button type="submit">Logout</button>
+                </form>
+            @endauth
         </div>
     </nav>
 
