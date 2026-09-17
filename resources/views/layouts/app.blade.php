@@ -21,6 +21,21 @@
             <a class="navbar-brand fw-bold" href="{{ route('eventos.index') }}">
                 🚀 FalaQ-Eu_T_3scuto <span class="badge bg-secondary fs-6">MVP</span>
             </a>
+            @yield('navbar_item')
+            @auth
+            <p>
+                Olá, {{ Auth::user()->name }}
+            </p>
+            @endauth
+            @guest          
+                <a class="navbar-brand" href="{{ route('login') }}">
+                    Login
+                </a>
+            <a class="navbar-brand" href="{{ route('register') }}">
+                Registro
+            </a>
+            @endguest
+
         </div>
     </nav>
 

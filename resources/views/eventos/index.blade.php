@@ -2,6 +2,12 @@
 
 @section('title', 'Eventos — FalaQ')
 
+@section('navbar_item')
+    @auth
+        <a href="{{ route('eventos.create') }}"> Criar Evento </a>
+    @endauth
+@endsection
+
 @section('content')
 <div class="row">
     <div class="col-md-12 mb-4">
