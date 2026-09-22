@@ -44,11 +44,12 @@ public function show($id)
     {
         $evento = Evento::findOrFail($id);
 
-        Pergunta::create([
-            'evento_id' => $evento->id,
-            'texto'     => $request->input('texto'),
-            'status'    => 'pendente',
-        ]);
+      Pergunta::create([
+    'evento_id' => $evento->id,
+    'user_id'   => auth()->id(),
+    'texto'     => $request->input('texto'),
+    'status'    => 'pendente',
+]);
 
         return redirect()->route('eventos.show', $evento->id)
             ->with('sucesso', 'Sua pergunta foi enviada com sucesso!');
