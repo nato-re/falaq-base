@@ -28,6 +28,7 @@ public function show($id)
     $evento = Evento::find($id);
 
     $perguntas = Pergunta::where('evento_id', $evento->id)
+        ->where('is_public', true)
         ->with('user')
         ->latest()
         ->paginate(10);
