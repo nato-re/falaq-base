@@ -14,16 +14,20 @@
                     <label for="texto" class="form-label text-secondary">Texto da Pergunta</label>
 
                     <textarea name="texto" id="texto" rows="4" 
-                              class="form-control bg-dark text-white border-secondary @error('texto') is-invalid @enderror"
-                              placeholder="Digite sua dúvida ou comentário para o palestrante..."></textarea>
-
+                              class="form-control bg-dark text-white border-secondary @error('texto') is-invalid @enderror  @error('conteudo') border-red-500 @enderror."
+                              placeholder="Digite sua dúvida ou comentário para o palestrante...">{{ old('conteudo') }}</textarea>
+                    @error('conteudo')
+                        <div class="text-red-500">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     @error('texto')
                         <div class="invalid-feedback fw-bold">
                             {{ $message }}
                         </div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold">Enviar Pergunta</button>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 w-100 fw-bold">Enviar Pergunta</button>
             </form>
         </div>
     </div>
@@ -36,10 +40,10 @@
         </div>
 
         @forelse($perguntas as $pergunta)
-            <div class="card mb-3 shadow-sm border-start border-4 border-primary">
-                <div class="card-body">
-                    <p class="fs-5 mb-2 text-white">{{ $pergunta->texto }}</p>
-                    <div class="d-flex justify-content-between align-items-center text-secondary small">
+            <div class="card mb-4 p-3 shadow-sm border-start border-4 border-primary rounded-3">
+                <div class="card-body p-2">
+                    <p class="fs-5 mb-3 text-white">{{ $pergunta->texto }}</p>
+                    <div class="d-flex justify-content-between align-items-center text-secondary small pt-2 border-top border-secondary border-opacity-25">
                         <span>Status: <span class="badge bg-success">{{ $pergunta->status }}</span></span>
                         <span>{{ $pergunta->created_at->format('d/m/Y H:i') }}</span>
                         <span>{{ $pergunta->user->name ?? 'Anônimo' }}.</span>
