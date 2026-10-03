@@ -17,7 +17,7 @@
         <label for="password">Senha</label>
         <input type="text" name="password" value="{{ old('password') }}" class="w-full mt-1 p-2 border rounded @error('loginError') border-red-500 @enderror"> 
 
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Entrar</button>
+        <x-button>Entrar</x-button>
 
     </div>
 </form>

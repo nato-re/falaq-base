@@ -25,7 +25,6 @@ class EventoController extends Controller
         return view('eventos.show', compact('evento', 'perguntas'));
     }
 
- 
     public function storePergunta(StorePerguntaRequest $request, $id)
     {
         $evento = Evento::findOrFail($id);
@@ -41,6 +40,17 @@ class EventoController extends Controller
             ->with('sucesso', 'Sua pergunta foi enviada com sucesso!');
     }
 
+    public function destroyPergunta(Pergunta $pergunta)
+    {
+        $this->authorize('delete', $pergunta);
+
+        $evento = $pergunta->evento;
+        $pergunta->delete();
+
+        return redirect()->route('eventos.show', $evento)
+            ->with('sucesso', 'Pergunta removida com sucesso!');
+    }
+
     public function create(){
         return view('eventos.create');
     }
@@ -48,5 +58,15 @@ class EventoController extends Controller
     public function store(EventoFormRequest $request){
         $evento = $request->user()->eventos()->create($request->validated());
         return redirect()->route('eventos.show', $evento->id);
+    }
+
+    public function destroy($id)
+    {
+        $evento = Evento::find($id);
+        if(Auth::user()->cannot('delete', $evento)){
+            return redirect()->route('eventos.show', $evento)->with('permissao', 'Usuário não pode deletar esse evento');
+        }
+        $evento->delete();
+        return redirect()->route('eventos.index');
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/eventos/create', [EventoController::class, 'create'])->name('eventos.create');
     Route::post('/eventos', [EventoController::class, 'store'])->name('eventos.store');
+    Route::delete('/eventos/{id}', [EventoController::class, 'destroy'])->name('eventos.destroy');
+    Route::delete('/perguntas/{pergunta}', [EventoController::class, 'destroyPergunta'])->name('perguntas.destroy');
 });
 
 
@@ -22,5 +24,3 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::get('/login', [LoginController::class, 'create'])->name('login.create');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'logout'])->name('auth.logout');
-
-
