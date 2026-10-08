@@ -76,6 +76,17 @@
                         </span>
                     </div>
 
+                    @can('delete', $pergunta)
+                        <form method="POST" action="{{ route('perguntas.destroy', $pergunta) }}" class="mt-3">
+                            @csrf
+                            @method('DELETE')
+
+                            <x-danger-button>
+                                Excluir Pergunta
+                            </x-danger-button>
+                        </form>
+                    @endcan
+
                 </div>
             </div>
 
@@ -96,5 +107,7 @@
 
     </div>
 </div>
+
+
 
 @endsection
