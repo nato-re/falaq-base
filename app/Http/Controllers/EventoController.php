@@ -7,6 +7,7 @@ use App\Models\Evento;
 use App\Models\Pergunta;
 use App\Http\Requests\StorePerguntaRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class EventoController extends Controller
 {
@@ -40,6 +41,17 @@ class EventoController extends Controller
         return redirect()->route('eventos.show', $evento->id)
             ->with('sucesso', 'Sua pergunta foi enviada com sucesso!');
     }
+
+    public function destroyPergunta(Pergunta $pergunta)
+    {
+        Gate::authorize('delete', $pergunta);
+    
+        $pergunta->delete();
+    
+        return back()->with('sucesso', 'Pergunta excluída com sucesso!');
+    }
+
+    
 
     public function create(){
         return view('eventos.create');
