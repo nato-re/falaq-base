@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -53,4 +54,11 @@ class User extends Authenticatable
         return $this->hasMany(Evento::class);
     }
 
+    /**
+     * TICKET #010: perguntas em que o usuário votou (pivot pergunta_user).
+     */
+    public function perguntasVotadas(): BelongsToMany
+    {
+        return $this->belongsToMany(Pergunta::class, 'pergunta_user')->withTimestamps();
+    }
 }

@@ -43,6 +43,34 @@
                         <span>Status: <span class="badge bg-success">{{ $pergunta->status }}</span></span>
                         <span>{{ $pergunta->created_at->format('d/m/Y H:i') }}</span>
                     </div>
+
+                    <!-- TICKET #012: Upvote da pergunta -->
+                    <div class="d-flex align-items-center gap-2 mt-3">
+                        <span class="badge bg-secondary fs-6">▲ {{ $pergunta->votos_count }}</span>
+                        <span class="text-secondary small">{{ $pergunta->votos_count == 1 ? 'voto' : 'votos' }}</span>
+
+                        @auth
+                            <form action="{{ route('perguntas.votar', $pergunta) }}" method="POST" class="ms-auto">
+                                @csrf
+                                @if($pergunta->votada_pelo_usuario)
+                                    <button type="submit" class="btn btn-sm btn-primary fw-bold"
+                                            title="Clique novamente para remover seu voto">
+                                        ✓ Votado · remover voto
+                                    </button>
+                                @else
+                                    <button type="submit" class="btn btn-sm btn-outline-light">
+                                        ▲ Votar
+                                    </button>
+                                @endif
+                            </form>
+                        @endauth
+
+                        @guest
+                            <a href="{{ route('login') }}" class="ms-auto small text-secondary">
+                                Entre para votar
+                            </a>
+                        @endguest
+                    </div>
                 </div>
             </div>
         @empty
