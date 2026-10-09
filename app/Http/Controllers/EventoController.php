@@ -20,16 +20,16 @@ class EventoController extends Controller
     {
         $evento = Evento::findOrFail($id);
 
-        // TICKET #012: ranking das perguntas públicas do evento pelo total de votos
         $perguntas = Pergunta::with('user')
             ->where('evento_id', $evento->id)
             ->where('is_public', true)
             ->withCount('votos')
             ->when(auth()->check(), function ($query) {
-                // Marca, na mesma consulta, se o usuário logado já votou em cada pergunta
-                $query->withExists(['votos as votada_pelo_usuario' => function ($q) {
-                    $q->where('users.id', auth()->id());
-                }]);
+                $query->withExists([
+                    'votos as votada_pelo_usuario' => function ($q) {
+                        $q->where('users.id', auth()->id());
+                    }
+                ]);
             })
             ->orderByDesc('votos_count')
             ->orderByDesc('created_at')
