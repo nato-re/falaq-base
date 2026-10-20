@@ -60,3 +60,6 @@
     </div>
 </div>
 @endsection
+<div class="mt-4">
+    {{ $perguntas->links() }}
+</div>
