@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\EventoStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class EventoFormRequest extends FormRequest
 {
@@ -26,8 +28,8 @@ class EventoFormRequest extends FormRequest
             'titulo' => 'string|required', 
             'descricao' => 'string', 
             'data_evento' => 'date',
-            'user_id' => ''
-            
+            'user_id' => '',
+            'status' =>  new Enum(EventoStatus::class)
         ];
     }
 }
