@@ -28,6 +28,9 @@
                     @csrf
                     <button type="submit" class="bg-gray-800 text-gray-200 px-4 py-2 rounded-md hover:bg-blue-700">Logout</button>
                 </form>
+                <a class="navbar-brand" href="{{ route('user.eventos') }}">
+                    Meus Eventos
+                </a>
             @endauth
             @guest          
                 <a class="navbar-brand" href="{{ route('login.create') }}">

@@ -5,6 +5,15 @@
 @section('content')
 <div class="row">
     <!-- Formularço de envio de Pergunta -->
+    @can('update', $evento)
+        <form action="{{ route('eventos.status', $evento->id) }}" method="POST">
+            @csrf
+            @method('patch')
+            {{-- <input type="text" name="status" value="{{ $evento->isPublicado() ? EventoStatus::ENCERRADO : EventoStatus::PUBLICADO }}"> --}}
+            <input type="text" name="status" value="{{ $evento->isPublicado() ? 'encerrado' : 'publicado' }}" hidden>
+            <button type="submit" class="btn {{ $evento->isPublicado() ? 'bg-red-600' : 'bg-green-600' }}">{{ $evento->isPublicado() ? "Encerrar" : "Publicar" }}</button>
+        </form>
+    @endcan
     <div class="col-md-5 mb-4">
         <div class="card shadow-sm p-3">
             <h4 class="fw-bold mb-3">💬 Faça sua Pergunta</h4>

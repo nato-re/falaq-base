@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/eventos/create', [EventoController::class, 'create'])->name('eventos.create');
     Route::post('/eventos', [EventoController::class, 'store'])->name('eventos.store');
-});
+    Route::patch('/eventos/{evento}/status', [EventoController::class, 'updateStatus'])
+        ->name('eventos.status');
+    Route::get('/user/eventos', [EventoController::class, 'userEventos'])->name('user.eventos');
 
+});
 
 Route::get('/', [EventoController::class, 'index'])->name('eventos.index');
 Route::get('/eventos/{id}', [EventoController::class, 'show'])->name('eventos.show');
