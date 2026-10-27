@@ -3,7 +3,41 @@
 @section('title', $evento->titulo . ' — FalaQ')
 
 @section('content')
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $erro)
+                    <li>{{ $erro }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    @can('moderate', $evento)
+        <div class="mb-4">
+            <a
+                href="{{ route('moderacoes.index', $evento) }}"
+                class="btn btn-warning"
+            >
+                Abrir fila de moderação
+            </a>
+        </div>
+    @endcan
 <div class="row">
+    <div class="flex items-center gap-4 my-4">
+        <span class="text-sm font-semibold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+            👥 {{ $evento->participantes->count() }} participante(s)
+        </span>
+    
+        @auth
+            <form action="{{ route('eventos.participar', $evento) }}" method="POST">
+                @csrf
+                <button type="submit" class="px-4 py-2 text-sm font-medium rounded-md {{ $evento->participantes->contains(auth()->user()) ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white' }}">
+                    {{ $evento->participantes->contains(auth()->user()) ? 'Cancelar Inscrição' : 'Inscrever-se no Evento' }}
+                </button>
+            </form>
+        @endauth
+    </div>
     <!-- Formularço de envio de Pergunta -->
     <div class="col-md-5 mb-4">
         <div class="card shadow-sm p-3">
@@ -39,6 +73,43 @@
             <div class="card mb-3 shadow-sm border-start border-4 border-primary">
                 <div class="card-body">
                     <p class="fs-5 mb-2 text-white">{{ $pergunta->texto }}</p>
+                    @auth
+                        <details class="my-3">
+                            <summary class="text-warning">
+                                Denunciar pergunta
+                            </summary>
+
+                            <form
+                                action="{{ route('moderacoes.store', $pergunta) }}"
+                                method="POST"
+                                class="mt-3"
+                            >
+                                @csrf
+
+                                <label
+                                    for="motivo-{{ $pergunta->id }}"
+                                    class="form-label"
+                                >
+                                    Motivo da denúncia
+                                </label>
+
+                                <textarea
+                                    name="motivo"
+                                    id="motivo-{{ $pergunta->id }}"
+                                    rows="3"
+                                    minlength="10"
+                                    maxlength="255"
+                                    required
+                                    class="form-control bg-dark text-white mb-2"
+                                    placeholder="Explique o motivo em 10 a 255 caracteres."
+                                ></textarea>
+
+                                <button type="submit" class="btn btn-warning btn-sm">
+                                    Enviar denúncia
+                                </button>
+                            </form>
+                        </details>
+                    @endauth
                     <div class="d-flex justify-content-between align-items-center text-secondary small">
                         <span>Status: <span class="badge bg-success">{{ $pergunta->status }}</span></span>
                         <span>{{ $pergunta->created_at->format('d/m/Y H:i') }}</span>

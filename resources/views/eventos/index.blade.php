@@ -28,6 +28,9 @@
                     <span class="badge bg-purple" style="background:#7c6af7;">
                         {{ $evento->perguntas->count() }} perguntas
                     </span>
+                    <span class="badge bg-purple" style="background:#7c6af7;">
+                        {{ $evento->participantes->count() }} participantes
+                    </span>
                     <a href="{{ route('eventos.show', $evento->id) }}" class="btn btn-primary btn-sm">
                         Entrar no Evento &rarr;
                     </a>
