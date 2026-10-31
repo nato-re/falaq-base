@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Http\Controllers;
@@ -13,19 +14,21 @@ class EventoController extends Controller
     public function index()
     {
         $eventos = Evento::all();
+
         return view('eventos.index', compact('eventos'));
     }
 
     public function show($id)
     {
-        $evento = Evento::find($id);
+        $evento = Evento::findOrFail($id);
 
-        $perguntas = Pergunta::all();
+        $perguntas = Pergunta::where('evento_id', $evento->id)
+            ->latest()
+            ->paginate(10);
 
         return view('eventos.show', compact('evento', 'perguntas'));
     }
 
- 
     public function storePergunta(StorePerguntaRequest $request, $id)
     {
         $evento = Evento::findOrFail($id);
@@ -33,20 +36,25 @@ class EventoController extends Controller
         Pergunta::create([
             'evento_id' => $evento->id,
             'user_id' => Auth::user()->id,
-            'texto'     => $request->input('texto'),
-            'status'    => 'pendente',
+            'texto' => $request->input('texto'),
+            'status' => 'pendente',
         ]);
 
         return redirect()->route('eventos.show', $evento->id)
             ->with('sucesso', 'Sua pergunta foi enviada com sucesso!');
     }
 
-    public function create(){
+    public function create()
+    {
         return view('eventos.create');
     }
 
-    public function store(EventoFormRequest $request){
-        $evento = $request->user()->eventos()->create($request->validated());
+    public function store(EventoFormRequest $request)
+    {
+        $evento = $request->user()->eventos()->create(
+            $request->validated()
+        );
+
         return redirect()->route('eventos.show', $evento->id);
     }
 }

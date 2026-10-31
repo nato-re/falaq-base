@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Http\Requests;
@@ -7,7 +8,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class StorePerguntaRequest extends FormRequest
 {
     /**
-     * Determina se o usuário está autorizado a fazer esta requisição.
+     * Determina se o usuário está autorizado
+     * a realizar esta requisição.
      */
     public function authorize(): bool
     {
@@ -15,15 +17,13 @@ class StorePerguntaRequest extends FormRequest
     }
 
     /**
-     * TICKET #001: Implemente aqui as regras de validação estritas.
-     * Requisitos:
-     * - texto: obrigatório, string, mínimo de 10 caracteres, máximo de 255.
-     * - evento_id: obrigatório, deve existir na tabela eventos.
+     * Regras de validação das perguntas.
      */
     public function rules(): array
     {
         return [
-            // TODO (Dev Jr): Adicione as regras de validação para o Ticket #001
+            'texto' => 'required|string|min:10|max:255',
+            'evento_id' => 'required|exists:eventos,id',
         ];
     }
 }

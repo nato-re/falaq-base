@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Http\Requests;
@@ -23,11 +24,10 @@ class EventoFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titulo' => 'string|required', 
-            'descricao' => 'string', 
+            'titulo' => 'string|required',
+            'descricao' => 'string',
             'data_evento' => 'date',
             'user_id' => ''
-            
         ];
     }
 }
