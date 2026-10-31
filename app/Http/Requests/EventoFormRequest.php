@@ -1,58 +1,33 @@
 
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Requests;
 
-use App\Http\Requests\EventoFormRequest;
-use App\Http\Requests\StorePerguntaRequest;
-use App\Models\Evento;
-use App\Models\Pergunta;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
 
-class EventoController extends Controller
+class EventoFormRequest extends FormRequest
 {
-    public function index()
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
     {
-        $eventos = Evento::all();
-
-        return view('eventos.index', compact('eventos'));
+        return true;
     }
 
-    public function show($id)
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
     {
-        $evento = Evento::findOrFail($id);
-
-        $perguntas = Pergunta::where('evento_id', $evento->id)
-            ->latest()
-            ->paginate(10);
-
-        return view('eventos.show', compact('evento', 'perguntas'));
-    }
-
-    public function storePergunta(StorePerguntaRequest $request, $id)
-    {
-        $evento = Evento::findOrFail($id);
-
-        Pergunta::create([
-            'evento_id' => $evento->id,
-            'user_id' => Auth::user()->id,
-            'texto' => $request->input('texto'),
-            'status' => 'pendente',
-        ]);
-
-        return redirect()->route('eventos.show', $evento->id)
-            ->with('sucesso', 'Sua pergunta foi enviada com sucesso!');
-    }
-
-    public function create()
-    {
-        return view('eventos.create');
-    }
-
-    public function store(EventoFormRequest $request)
-    {
-        $evento = $request->user()->eventos()->create($request->validated());
-
-        return redirect()->route('eventos.show', $evento->id);
+        return [
+            'titulo' => 'string|required',
+            'descricao' => 'string',
+            'data_evento' => 'date',
+            'user_id' => ''
+        ];
     }
 }
