@@ -10,10 +10,11 @@
             <h4 class="fw-bold mb-3">💬 Faça sua Pergunta</h4>
             <form action="{{ route('eventos.perguntas.store', $evento->id) }}" method="POST">
                 @csrf
+                <input type="hidden" name="evento_id" value="{{ $evento->id }}">
                 <div class="mb-3">
                     <label for="texto" class="form-label text-secondary">Texto da Pergunta</label>
 
-                    <textarea name="texto" id="texto" rows="4" 
+                    <textarea name="texto" id="texto" rows="4"
                               class="form-control bg-dark text-white border-secondary @error('texto') is-invalid @enderror"
                               placeholder="Digite sua dúvida ou comentário para o palestrante..."></textarea>
 
@@ -54,7 +55,7 @@
         <!-- TICKET #002: Renderização dos Botões de Paginação -->
         @if(method_exists($perguntas, 'links'))
             <div class="d-flex justify-content-center mt-4">
-                
+                {{ $perguntas->links() }}
             </div>
         @endif
     </div>
