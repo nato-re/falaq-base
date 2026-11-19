@@ -54,3 +54,9 @@ class User extends Authenticatable
     }
 
 }
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+public function perguntas(): HasMany
+{
+    return $this->hasMany(Pergunta::class);
+}
