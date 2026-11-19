@@ -50,4 +50,8 @@ class EventoController extends Controller
         return redirect()->route('eventos.show', $evento->id);
     }
 }
-
+$perguntas = $evento->perguntas()
+    ->where('is_public', true)
+    ->with('user')
+    ->latest()
+    ->paginate(10);
