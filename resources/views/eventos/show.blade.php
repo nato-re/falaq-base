@@ -60,3 +60,7 @@
     </div>
 </div>
 @endsection
+<div class="mt-4">
+    {{ $perguntas->links() }}
+</div>
+<small>Por: {{ $pergunta->user->name ?? 'Anônimo' }}</small>

@@ -22,3 +22,10 @@ class Pergunta extends Model
         return $this->belongsTo(User::class);
     }
 }
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+public function user(): BelongsTo
+{
+    return $this->belongsTo(User::class);
+}
+App\Models\Pergunta::latest()->first()->update(['is_public' => true]);
