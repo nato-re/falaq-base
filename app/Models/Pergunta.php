@@ -28,3 +28,4 @@ public function user(): BelongsTo
 {
     return $this->belongsTo(User::class);
 }
+App\Models\Pergunta::latest()->first()->update(['is_public' => true]);
